@@ -1,0 +1,9 @@
+# What SpelaionDB's `plugins.toml` says of this plugin besides its builds. The release notes
+# are written from here, and `tests/conformance.rs` checks it against what the program says.
+
+# The plugin protocol this plugin speaks.
+protocol = "1.0"
+# The engines it serves, by the name SpelaionDB's configuration uses (`engine = "example"`).
+engines = ["example"]
+# The lowest SpelaionDB it works with.
+min_app = "0.10.0"

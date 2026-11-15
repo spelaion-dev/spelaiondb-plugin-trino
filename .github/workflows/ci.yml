@@ -1,0 +1,21 @@
+# This repository's own checks: the example plugin, through the shared workflow every plugin
+# calls. A plugin's repository has this same file with `uses:` pointing here, by commit:
+#
+#     uses: spelaion-dev/spelaiondb-plugin-template/.github/workflows/plugin-ci.yml@<commit>
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/plugin-ci.yml

@@ -1,0 +1,42 @@
+[package]
+# Rename: spelaiondb-plugin-<engine>. It is also the program's name, which is what SpelaionDB's
+# plugins.toml pins.
+name = "spelaiondb-plugin-example"
+description = "A made-up engine for SpelaionDB, served as a plugin: what a plugin's repository starts from"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/spelaion-dev/spelaiondb-plugin-template"
+publish = false
+
+[lib]
+name = "spelaion_driver_example"
+
+[[bin]]
+name = "spelaiondb-plugin-example"
+path = "src/bin/spelaiondb-plugin-example.rs"
+
+# The contract, the engines' dialects and the plugin's side of the protocol come from
+# SpelaionDB's repository, by tag (ADR-042): they are one workspace there, so one tag pins
+# them together. Moving the tag is how a plugin follows a protocol change.
+[dependencies]
+spelaion-driver-api = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+spelaion-plugin-sdk = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+# A driver that writes names into its catalog queries takes its engine's quoting from here:
+# spelaion-dialect = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+# The same Arrow as SpelaionDB's: batches cross the two unchanged.
+arrow = { version = "60", default-features = false, features = ["ipc"] }
+async-trait = "0.1"
+futures-util = "0.3"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+
+[dev-dependencies]
+# The conformance set every plugin runs against its own program (tests/conformance.rs).
+spelaion-plugin-host = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+# What ships is this program: small and without the debugger's tables.
+[profile.release]
+strip = "symbols"

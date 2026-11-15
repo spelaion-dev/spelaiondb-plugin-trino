@@ -1,0 +1,33 @@
+# cargo-deny: licenses, advisories and sources. The same rules as SpelaionDB's repository.
+
+[advisories]
+yanked = "deny"
+
+[licenses]
+confidence-threshold = 0.9
+allow = [
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "MPL-2.0",
+  "MIT",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "Unicode-3.0",
+  "CC0-1.0",
+  "CDLA-Permissive-2.0",
+]
+
+[bans]
+multiple-versions = "allow"
+# Not "deny" as in SpelaionDB's repository: cargo-deny counts a git dependency as a wildcard,
+# and the contract comes by git tag (ADR-042). The tag pins it, and `[sources]` below allows
+# git from SpelaionDB's repository only.
+wildcards = "allow"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+# The contract and the plugin's side of the protocol, by tag (ADR-042).
+allow-git = ["https://github.com/spelaion-dev/spelaiondb"]

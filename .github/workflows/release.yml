@@ -1,0 +1,18 @@
+# This repository's own release: the example plugin, through the shared workflow every plugin
+# calls. A plugin's repository has this same file with `uses:` pointing here, by commit:
+#
+#     uses: spelaion-dev/spelaiondb-plugin-template/.github/workflows/plugin-release.yml@<commit>
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/plugin-release.yml
