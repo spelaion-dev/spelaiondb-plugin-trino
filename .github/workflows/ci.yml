@@ -1,7 +1,6 @@
-# This repository's own checks: the example plugin, through the shared workflow every plugin
-# calls. A plugin's repository has this same file with `uses:` pointing here, by commit:
-#
-#     uses: spelaion-dev/spelaiondb-plugin-template/.github/workflows/plugin-ci.yml@<commit>
+# What every pull request and every push to `main` must pass: the checks every plugin of
+# SpelaionDB shares, kept in the template's repository and called by commit. A change there
+# reaches this plugin when this file moves the commit.
 name: CI
 
 on:
@@ -18,4 +17,10 @@ permissions:
 
 jobs:
   ci:
-    uses: ./.github/workflows/plugin-ci.yml
+    uses: spelaion-dev/spelaiondb-plugin-template/.github/workflows/plugin-ci.yml@011250b107ce4a775c1dd94579c8aa36d9887a15
+    with:
+      # Where ci/services.sh put the servers. On Windows there is none: the tests that need it
+      # are skipped there, saying so.
+      test-env: |
+        SPELAION_TEST_TRINO=127.0.0.1:18080
+        SPELAION_TEST_PRESTO=127.0.0.1:18081

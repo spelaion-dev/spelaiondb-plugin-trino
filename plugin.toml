@@ -2,8 +2,8 @@
 # are written from here, and `tests/conformance.rs` checks it against what the program says.
 
 # The plugin protocol this plugin speaks.
-protocol = "1.0"
-# The engines it serves, by the name SpelaionDB's configuration uses (`engine = "example"`).
-engines = ["example"]
+protocol = "1.1"
+# The engines it serves, by the name SpelaionDB's configuration uses (`engine = "trino"`).
+engines = ["trino", "presto"]
 # The lowest SpelaionDB it works with.
 min_app = "0.10.0"

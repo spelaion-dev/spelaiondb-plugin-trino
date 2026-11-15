@@ -1,38 +1,48 @@
 [package]
-# Rename: spelaiondb-plugin-<engine>. It is also the program's name, which is what SpelaionDB's
-# plugins.toml pins.
-name = "spelaiondb-plugin-example"
-description = "A made-up engine for SpelaionDB, served as a plugin: what a plugin's repository starts from"
+name = "spelaiondb-plugin-trino"
+description = "Trino and Presto for SpelaionDB: the engines' driver, served as a plugin"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
-repository = "https://github.com/spelaion-dev/spelaiondb-plugin-template"
+repository = "https://github.com/spelaion-dev/spelaiondb-plugin-trino"
 publish = false
 
 [lib]
-name = "spelaion_driver_example"
+name = "spelaion_driver_trino"
 
 [[bin]]
-name = "spelaiondb-plugin-example"
-path = "src/bin/spelaiondb-plugin-example.rs"
+name = "spelaiondb-plugin-trino"
+path = "src/bin/spelaiondb-plugin-trino.rs"
 
-# The contract, the engines' dialects and the plugin's side of the protocol come from
-# SpelaionDB's repository, by tag (ADR-042): they are one workspace there, so one tag pins
-# them together. Moving the tag is how a plugin follows a protocol change.
+# The contract and the plugin's side of the protocol come from SpelaionDB's repository, by tag
+# (ADR-042): they are one workspace there, so one tag pins them together. Moving the tag is how
+# this plugin follows a protocol change.
 [dependencies]
-spelaion-driver-api = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
-spelaion-plugin-sdk = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
-# A driver that writes names into its catalog queries takes its engine's quoting from here:
-# spelaion-dialect = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+spelaion-driver-api = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.2.0" }
+spelaion-plugin-sdk = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.2.0" }
 # The same Arrow as SpelaionDB's: batches cross the two unchanged.
 arrow = { version = "60", default-features = false, features = ["ipc"] }
 async-trait = "0.1"
+bytes = "1"
 futures-util = "0.3"
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+# Trino's and Presto's HTTP protocol, spoken over connections this driver opens itself: to the
+# address SpelaionDB gives (the local end of a tunnel), with TLS verified against the real host
+# name, and never through a proxy of the system's.
+http-body-util = "0.1"
+hyper = { version = "1", features = ["client", "http1"] }
+hyper-util = { version = "0.1", features = ["tokio"] }
+# ring instead of aws-lc-rs: the latter needs CMake and NASM on Windows.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
+rustls-native-certs = "0.8"
+# float_roundtrip: the server's numbers parse to exactly the double it meant (1e30, not
+# 9.999999999999999e29).
+serde_json = { version = "1", features = ["float_roundtrip"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "net", "io-util"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12", "logging"] }
 
 [dev-dependencies]
 # The conformance set every plugin runs against its own program (tests/conformance.rs).
-spelaion-plugin-host = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.1.1" }
+spelaion-plugin-host = { git = "https://github.com/spelaion-dev/spelaiondb", tag = "plugin-sdk-v0.2.0" }
 
 [lints.rust]
 unsafe_code = "forbid"
