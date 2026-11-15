@@ -1,0 +1,25 @@
+# The servers this plugin's tests run against: the same as in SpelaionDB's repository.
+#
+# Trino 479 on 127.0.0.1:18080 (SPELAION_TEST_TRINO) and Presto 0.295 on 127.0.0.1:18081
+# (SPELAION_TEST_PRESTO), each with the catalogs its image ships (`memory`, `system`…). No
+# password: they take one only over TLS, which these servers do not serve.
+name: spelaiondb-plugin-trino-test
+
+services:
+  trino:
+    image: trinodb/trino:479
+    ports:
+      - "127.0.0.1:18080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/v1/info | grep -q '\"starting\":false'"]
+      interval: 3s
+      retries: 60
+
+  presto:
+    image: prestodb/presto:0.295
+    ports:
+      - "127.0.0.1:18081:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/v1/info | grep -q '\"starting\":false'"]
+      interval: 3s
+      retries: 60

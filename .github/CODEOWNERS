@@ -1,6 +1,5 @@
 # A pull request that changes one of these files needs the approval of one of its owners, on
-# top of green CI. They decide what is built, what is released and what a plugin depends on.
-# Here that includes the workflows every plugin of ours calls.
+# top of green CI. They decide what is built, what is released and what this plugin depends on.
 
 /.github/                                       @petilolz @frglez
 /Cargo.toml                                     @petilolz @frglez
