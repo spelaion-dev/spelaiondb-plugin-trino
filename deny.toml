@@ -2,6 +2,13 @@
 
 [advisories]
 yanked = "deny"
+ignore = [
+  # Unmaintained (not vulnerable), no fixed version: chrono. It comes only through Arrow
+  # (arrow-arith, arrow-array, arrow-cast), which must stay the version SpelaionDB uses, and this
+  # plugin does not name it. Remove this when Arrow no longer brings it (SpelaionDB's Plane
+  # SDB-413, where its repository has the same exception).
+  { id = "RUSTSEC-2026-0543", reason = "chrono: unmaintained, not vulnerable; only through Arrow; remove when Arrow moves off it (SDB-413)" },
+]
 
 [licenses]
 confidence-threshold = 0.9
